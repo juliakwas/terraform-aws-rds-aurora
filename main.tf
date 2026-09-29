@@ -62,7 +62,7 @@ resource "aws_rds_cluster" "this" {
   database_name               = var.is_primary_cluster ? var.database_name : null
   # We are using `allocated_storage` as a proxy to determine if this is RDS multi-az or not
   # https://github.com/hashicorp/terraform-provider-aws/issues/30596#issuecomment-1639292427
-  db_cluster_instance_class           = var.allocated_storage != null ? var.cluster_instance_class : null
+  db_cluster_instance_class           = (var.allocated_storage != null || var.replication_source_identifier != null) ? var.cluster_instance_class : null
   db_cluster_parameter_group_name     = local.create_cluster_parameter_group ? aws_rds_cluster_parameter_group.this[0].id : var.cluster_parameter_group_name
   db_instance_parameter_group_name    = var.allow_major_version_upgrade ? var.cluster_db_instance_parameter_group_name : null
   db_subnet_group_name                = local.db_subnet_group_name
